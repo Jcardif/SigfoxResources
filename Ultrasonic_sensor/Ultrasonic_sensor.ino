@@ -1,20 +1,22 @@
+/*
+ Name:		BusSeat Tracker Ultrasonic Sensor
+ Created:	October 4, 2019 
+ Sensor :   UltraSonic sensor =>  HC-SR04 
+ Authors:	Joshua Ndemenge, Clinton Oduor, Aron Ayub
+*/
+
 #include <Arduino.h>
 #include <ArduinoLowPower.h>
 #include <SigFox.h>
 
 
 // defines pins numbers
-<<<<<<< HEAD
-const int trigPin = 9;
-const int echoPin = 10;
-
-=======
 const int trigPin = 3;
 const int echoPin = 4;
->>>>>>> 5341cae145da1e1035eeb81f24a198e15a6c213a
+
 // defines variables
 long duration;
-int distance;
+float distance;
 
 void setup() {
 
@@ -44,13 +46,54 @@ void loop() {
     // Calculating the distance
     distance= duration*0.034/2;
 
-    //Send to Distance Data to SigFox
-    
+    //Send to Distance Data to Sigfox
+    sendDataToSigFox(distance);
 
     // Prints the distance on the Serial Monitor
     Serial.print("Distance: ");
     Serial.println(distance);
 
+}
+
+void sendDataToSigFox(float data){
+    /*
+    ATTENTION - the structure we are going to send MUST
+    be declared "packed" otherwise we'll get padding mismatch
+    on the sent data - see http://www.catb.org/esr/structure-packing/#_structure_alignment_and_padding
+    for more details
+    */
+
+    typedef struct __attribute__ ((packed)) sigfox_message {
+    float dist;
+    uint8_t lastMessageStatus;
+    } SigfoxMessage;
+
+    // stub for message which will be sent
+    SigfoxMessage msg;
+
+    if (!SigFox.begin()) {
+        Serial.println("Shield error or not present!");
+        return;
+    }
+
+    //start the module
+    SigFox.begin();
+
+    // Wait at least 30ms after first configuration (100ms before)
+    delay(100);
+
+    msg.dist=distance;        
+
+    SigFox.status();
+    delay(1);
+
+    SigFox.beginPacket();
+    SigFox.write((uint8_t*)&msg,12);
+
+    msg.lastMessageStatus=SigFox.endPacket();
+
+    Serial.println("status: "+ String(msg.lastMessageStatus));  
+    Serial.println("Change occured with a new distance of  " + String(msg.dist)); 
 }
 
 void getDeviceId(){
