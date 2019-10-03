@@ -4,9 +4,14 @@
 
 
 // defines pins numbers
+<<<<<<< HEAD
 const int trigPin = 9;
 const int echoPin = 10;
 
+=======
+const int trigPin = 3;
+const int echoPin = 4;
+>>>>>>> 5341cae145da1e1035eeb81f24a198e15a6c213a
 // defines variables
 long duration;
 int distance;
