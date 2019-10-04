@@ -6,6 +6,7 @@
 */
 
 #include <Arduino.h>
+#include <HardwareSerial.h>
 #include <ArduinoLowPower.h>
 #include <SigFox.h>
 

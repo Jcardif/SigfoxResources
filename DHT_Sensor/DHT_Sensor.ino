@@ -1,4 +1,6 @@
 #include <dht11.h>
+#include <arduino.h>
+
 #define DHT11PIN 4
 
 dht11 DHT11;
