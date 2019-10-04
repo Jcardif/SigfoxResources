@@ -6,7 +6,6 @@
 */
 
 #include <Arduino.h>
-#include <HardwareSerial.h>
 #include <ArduinoLowPower.h>
 #include <SigFox.h>
 
@@ -21,20 +20,22 @@ float distance;
 
 void setup() {
 
-    /*Get Device Info
-    Run This funtion to get the ID and PAC after which yoi can safely comment
+    /*
+        Get Device Info
+        Run This funtion to get the ID and PAC after which yoi can safely comment
     */
     getDeviceId();
 
-    pinMode(trigPin, OUTPUT); // Sets the trigPin as an Output
-    pinMode(echoPin, INPUT); // Sets the echoPin as an Input
-    Serial.begin(9600); // Starts the serial communication
+    pinMode(trigPin, OUTPUT);   // Sets the trigPin as an Output
+    pinMode(echoPin, INPUT);    // Sets the echoPin as an Input
+    Serial.begin(9600);         // Starts the serial communication
 }
 
 void loop() {
     // Clears the trigPin
     digitalWrite(trigPin, LOW);
     delayMicroseconds(2);
+
 
     // Sets the trigPin on HIGH state for 10 micro seconds
     digitalWrite(trigPin, HIGH);
