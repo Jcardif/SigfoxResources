@@ -79,6 +79,11 @@ void sendDataToSigFox(float distData){
     // stub for message which will be sent
     SigfoxMessage msg;
 
+    if (!SigFox.begin()) {
+        Serial.println("Shield error or not present!");
+        return;
+    }
+
     //start the module
     SigFox.begin();
 
