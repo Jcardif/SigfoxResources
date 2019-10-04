@@ -24,7 +24,7 @@ void setup() {
         Get Device Info
         Run This funtion to get the ID and PAC after which yoi can safely comment
     */
-    getDeviceId();
+   // getDeviceId();
 
     pinMode(trigPin, OUTPUT);   // Sets the trigPin as an Output
     pinMode(echoPin, INPUT);    // Sets the echoPin as an Input
@@ -34,30 +34,36 @@ void setup() {
 void loop() {
     // Clears the trigPin
     digitalWrite(trigPin, LOW);
-    delayMicroseconds(2);
+    delay(1000);
 
 
-    // Sets the trigPin on HIGH state for 10 micro seconds
+    // Sets the trigPin on HIGH state for 1 second
     digitalWrite(trigPin, HIGH);
-    delayMicroseconds(10);
+    delay(1000);
     digitalWrite(trigPin, LOW);
 
     // Reads the echoPin, returns the sound wave travel time in microseconds
     duration = pulseIn(echoPin, HIGH);
 
+
+    if(duration == 0){
+        Serial.println("Warning : No pulse from the sensor");
+        return;
+    }
+    
+
     // Calculating the distance
     distance= duration*0.034/2;
-
-    //Send to Distance Data to Sigfox
-    sendDataToSigFox(distance);
 
     // Prints the distance on the Serial Monitor
     Serial.print("Distance: ");
     Serial.println(distance);
 
+    //Send to Distance Data to Sigfox
+    sendDataToSigFox(distance);
 }
 
-void sendDataToSigFox(float data){
+void sendDataToSigFox(float distData){
     /*
     ATTENTION - the structure we are going to send MUST
     be declared "packed" otherwise we'll get padding mismatch
@@ -73,18 +79,13 @@ void sendDataToSigFox(float data){
     // stub for message which will be sent
     SigfoxMessage msg;
 
-    if (!SigFox.begin()) {
-        Serial.println("Shield error or not present!");
-        return;
-    }
-
     //start the module
     SigFox.begin();
 
     // Wait at least 30ms after first configuration (100ms before)
     delay(100);
 
-    msg.dist=distance;        
+    msg.dist=distData;        
 
     SigFox.status();
     delay(1);
